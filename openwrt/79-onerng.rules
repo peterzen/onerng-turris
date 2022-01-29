@@ -1,0 +1,6 @@
+#
+#	start rngd  for the onerng entropy generator
+#
+ACTION=="add", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="6086", ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_CANDIDATE}="0", OWNER:="root", GROUP:="root", MODE:="0600", RUN+="/sbin/onerng.sh %k"
+ACTION=="remove", ENV{ID_VENDOR_ID}=="1d50", ENV{ID_MODEL_ID}=="6086", RUN+="/sbin/onerng.sh kill %k"
+
