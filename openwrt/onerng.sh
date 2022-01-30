@@ -146,11 +146,7 @@ if [ "$1" = "daemon" ]; then
 		#
 		#       if the system has a default RNG running shut it down
 		#
-		v=`systemctl list-units 2>/dev/null | grep rngd | grep running | wc -l`
-		if [ "$v" = "1" ]
-		then
-			/etc/init.d/rngd stop
-		fi
+		/etc/init.d/rngd stop
 
 		#
 		#	RNGD seems to do its random testing in a way that doesn't always tolerate
@@ -226,22 +222,17 @@ if [ "$1" = "kill" ]; then
 		if [ -e /var/lock/LCK..$t2 ]
 		then
         		kill -9 `cat /var/lock/LCK..$t2`
-        		rm /var/lock/LCK..$t2
+        		rm -f /var/lock/LCK..$t2
 		fi
+		if [ -e /var/lock/onerng..$t2 ]
+		then
+        		kill -9 `cat /var/lock/onerng..$t2`
+        		rm -f /var/lock/onerng..$t2
+		fi
+
 	fi
 
-	#
-	#       if there's a default rngd we can restart it
-	#
-	v=`which systemctl | grep "not found" | wc -l`
-	if [ $v != "1" ]
-	then
-		v=`systemctl list-units | grep rngd | grep running | wc -l`
-		if [ $v = "0" ]
-		then
-			/etc/init.d/rngd start >/dev/null 2>&1
-		fi
-	fi
+	/etc/init.d/rngd start 
         exit 0
 fi
 #
@@ -252,4 +243,8 @@ then
 	exit 1
 fi
 echo "/sbin/onerng.sh daemon $1" | at -M NOW
+
+#/usr/bin/socat FILE:/dev/$1 TCP-LISTEN:55000,fork
+#echo ?? > /var/lock/onerng..$1
+
 exit 0
