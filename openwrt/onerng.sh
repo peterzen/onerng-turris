@@ -224,11 +224,6 @@ if [ "$1" = "kill" ]; then
         		kill -9 `cat /var/lock/LCK..$t2`
         		rm -f /var/lock/LCK..$t2
 		fi
-		if [ -e /var/lock/onerng..$t2 ]
-		then
-        		kill -9 `cat /var/lock/onerng..$t2`
-        		rm -f /var/lock/onerng..$t2
-		fi
 
 	fi
 
@@ -244,7 +239,5 @@ then
 fi
 echo "/sbin/onerng.sh daemon $1" | at -M NOW
 
-#/usr/bin/socat FILE:/dev/$1 TCP-LISTEN:55000,fork
-#echo ?? > /var/lock/onerng..$1
 
 exit 0
